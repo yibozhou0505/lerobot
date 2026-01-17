@@ -44,12 +44,13 @@ class SOLeader(Teleoperator):
         self.bus = FeetechMotorsBus(
             port=self.config.port,
             motors={
-                "shoulder_pan": Motor(1, "sts3215", norm_mode_body),
-                "shoulder_lift": Motor(2, "sts3215", norm_mode_body),
-                "elbow_flex": Motor(3, "sts3215", norm_mode_body),
-                "wrist_flex": Motor(4, "sts3215", norm_mode_body),
-                "wrist_roll": Motor(5, "sts3215", norm_mode_body),
-                "gripper": Motor(6, "sts3215", MotorNormMode.RANGE_0_100),
+                "base": Motor(1, "sts3215", norm_mode_body),
+                "shoulder": Motor(2, "sts3215", norm_mode_body),
+                "elbow": Motor(3, "sts3215", norm_mode_body),
+                "wrist_roll1": Motor(4, "sts3215", norm_mode_body),
+                "wrist_pitch": Motor(5, "sts3215", norm_mode_body),
+                "wrist_roll2":Motor(6,"sts3215", norm_mode_body),
+                "gripper": Motor(7, "sts3215", MotorNormMode.RANGE_0_100),
             },
             calibration=self.calibration,
         )
@@ -136,6 +137,10 @@ class SOLeader(Teleoperator):
     def setup_motors(self) -> None:
         for motor in reversed(self.bus.motors):
             input(f"Connect the controller board to the '{motor}' motor only and press enter.")
+            from pathlib import Path
+            path = Path(__file__).resolve
+            print(f"path {path}")
+
             self.bus.setup_motor(motor)
             print(f"'{motor}' motor id set to {self.bus.motors[motor].id}")
 

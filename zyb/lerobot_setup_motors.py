@@ -25,7 +25,6 @@ lerobot-setup-motors \
 """
 
 from dataclasses import dataclass
-from pathlib import Path
 
 import draccus
 
@@ -86,8 +85,6 @@ def setup_motors(cfg: SetupConfig):
 
 
 def main():
-    path = Path(__file__).resolve()
-    print(f'{path} this is entrance')
     setup_motors()
 
 
