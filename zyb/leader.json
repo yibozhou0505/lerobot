@@ -1,0 +1,51 @@
+{
+    "base": {
+        "id": 1,
+        "drive_mode": 0,
+        "homing_offset": 1,
+        "range_min": 865,
+        "range_max": 3215
+    },
+    "shoulder": {
+        "id": 2,
+        "drive_mode": 0,
+        "homing_offset": -988,
+        "range_min": 0,
+        "range_max": 4095
+    },
+    "elbow": {
+        "id": 3,
+        "drive_mode": 0,
+        "homing_offset": 1281,
+        "range_min": 1028,
+        "range_max": 3153
+    },
+    "wrist_roll1": {
+        "id": 4,
+        "drive_mode": 0,
+        "homing_offset": -688,
+        "range_min": 897,
+        "range_max": 3224
+    },
+    "wrist_pitch": {
+        "id": 5,
+        "drive_mode": 0,
+        "homing_offset": 1134,
+        "range_min": 589,
+        "range_max": 2306
+    },
+    "wrist_roll2": {
+        "id": 6,
+        "drive_mode": 0,
+        "homing_offset": -1846,
+        "range_min": 0,
+        "range_max": 4095
+    },
+    "gripper": {
+        "id": 7,
+        "drive_mode": 0,
+        "homing_offset": 1414,
+        "range_min": 2020,
+        "range_max": 2524
+    }
+}

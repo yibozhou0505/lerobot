@@ -20,7 +20,7 @@ from typing import TypeAlias
 
 from lerobot.motors import Motor, MotorCalibration, MotorNormMode
 from lerobot.motors.feetech import (
-    FeetechMotorsBus,
+    FeetechMotorsBus,   # 总线控制类
     OperatingMode,
 )
 from lerobot.utils.errors import DeviceAlreadyConnectedError, DeviceNotConnectedError
@@ -33,12 +33,13 @@ logger = logging.getLogger(__name__)
 
 class SOLeader(Teleoperator):
     """Generic SO leader base for SO-100/101/10X teleoperators."""
+    '''遥操作SO子类'''
 
     config_class = SOLeaderTeleopConfig
     name = "so_leader"
 
     def __init__(self, config: SOLeaderTeleopConfig):
-        super().__init__(config)
+        super().__init__(config)    # 调用父类构造函数
         self.config = config
         norm_mode_body = MotorNormMode.DEGREES if config.use_degrees else MotorNormMode.RANGE_M100_100
         self.bus = FeetechMotorsBus(
@@ -96,20 +97,23 @@ class SOLeader(Teleoperator):
                 self.bus.write_calibration(self.calibration)
                 return
 
+        # 重新校准流程
         logger.info(f"\nRunning calibration of {self}")
-        self.bus.disable_torque()
+        self.bus.disable_torque()   # 关闭力矩
         for motor in self.bus.motors:
-            self.bus.write("Operating_Mode", motor, OperatingMode.POSITION.value)
+            self.bus.write("Operating_Mode", motor, OperatingMode.POSITION.value)   # 写寄存器为位置控制模式
 
         input(f"Move {self} to the middle of its range of motion and press ENTER....")
-        homing_offsets = self.bus.set_half_turn_homings()
+        homing_offsets = self.bus.set_half_turn_homings()   # 设置半圈归零偏置(中位)
 
-        full_turn_motor = "wrist_roll"
+        full_turn_motor = "wrist_roll2" # 可360, 其他的需要逐个摆动关节确定限位
         unknown_range_motors = [motor for motor in self.bus.motors if motor != full_turn_motor]
         print(
             f"Move all joints except '{full_turn_motor}' sequentially through their "
             "entire ranges of motion.\nRecording positions. Press ENTER to stop..."
         )
+
+        # 对于每个电机确定限位
         range_mins, range_maxes = self.bus.record_ranges_of_motion(unknown_range_motors)
         range_mins[full_turn_motor] = 0
         range_maxes[full_turn_motor] = 4095
@@ -118,8 +122,8 @@ class SOLeader(Teleoperator):
         for motor, m in self.bus.motors.items():
             self.calibration[motor] = MotorCalibration(
                 id=m.id,
-                drive_mode=0,
-                homing_offset=homing_offsets[motor],
+                drive_mode=0,   # 驱动模式
+                homing_offset=homing_offsets[motor],    # 中位偏置
                 range_min=range_mins[motor],
                 range_max=range_maxes[motor],
             )
@@ -129,6 +133,7 @@ class SOLeader(Teleoperator):
         print(f"Calibration saved to {self.calibration_fpath}")
 
     def configure(self) -> None:
+        # 先关力矩模式,然后总线配置参数
         self.bus.disable_torque()
         self.bus.configure_motors()
         for motor in self.bus.motors:
@@ -137,19 +142,20 @@ class SOLeader(Teleoperator):
     def setup_motors(self) -> None:
         for motor in reversed(self.bus.motors):
             input(f"Connect the controller board to the '{motor}' motor only and press enter.")
-            from pathlib import Path
-            path = Path(__file__).resolve
-            print(f"path {path}")
+            # from pathlib import Path
+            # path = Path(__file__).resolve()
+            # print(f"path {path}")
 
-            self.bus.setup_motor(motor)
+            self.bus.setup_motor(motor) # 执行id设置流程
             print(f"'{motor}' motor id set to {self.bus.motors[motor].id}")
 
     def get_action(self) -> dict[str, float]:
+        '''读当前位置'''
         if not self.is_connected:
             raise DeviceNotConnectedError(f"{self} is not connected.")
 
         start = time.perf_counter()
-        action = self.bus.sync_read("Present_Position")
+        action = self.bus.sync_read("Present_Position") # 同步读取所有电机position
         action = {f"{motor}.pos": val for motor, val in action.items()}
         dt_ms = (time.perf_counter() - start) * 1e3
         logger.debug(f"{self} read action: {dt_ms:.1f}ms")
@@ -161,7 +167,7 @@ class SOLeader(Teleoperator):
 
     def disconnect(self) -> None:
         if not self.is_connected:
-            DeviceNotConnectedError(f"{self} is not connected.")
+            raise DeviceNotConnectedError(f"{self} is not connected.")
 
         self.bus.disconnect()
         logger.info(f"{self} disconnected.")
