@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+
+'''
+还需要适配lerobot的CLI框架，目前只是一个独立脚本
+
+使用:
+1. zsh can_activate.sh
+2. python zyb/teleop_so2piper.py
+'''
+
 import json
 import time
 from pathlib import Path
