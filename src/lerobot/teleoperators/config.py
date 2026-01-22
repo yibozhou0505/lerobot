@@ -19,10 +19,14 @@ from pathlib import Path
 import draccus
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True)    # 只能用关键字参数,不能用位置参数
 class TeleoperatorConfig(draccus.ChoiceRegistry, abc.ABC):
+    '''draccus.ChoiceRegistry注册表/选择器基类,允许使用字符串注册子类
+    ABC = Abstract Base Class(抽象基类),不一定直接实例化而是给子类继承用
+    '''
     # Allows to distinguish between different teleoperators of the same type
-    id: str | None = None
+    id: str | None = None   # 同一个实例用id区分
+    
     # Directory to store calibration file
     calibration_dir: Path | None = None
 

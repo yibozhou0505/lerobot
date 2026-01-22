@@ -112,7 +112,7 @@ class SOFollower(Robot):
 
     def calibrate(self) -> None:
         if self.calibration:
-            # Calibration file exists, ask user whether to use it or run new calibration
+            # Calibration fi52le exists, ask user whether to use it or run new calibration
             user_input = input(
                 f"Press ENTER to use provided calibration file associated with the id {self.id}, or type 'c' and press ENTER to run calibration: "
             )

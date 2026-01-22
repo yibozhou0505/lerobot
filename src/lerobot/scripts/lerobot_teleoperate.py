@@ -157,13 +157,13 @@ def teleop_loop(
         obs = robot.get_observation()
 
         # Get teleop action
-        raw_action = teleop.get_action()
+        raw_action = teleop.get_action()    # 读取遥操作
 
-        # Process teleop action through pipeline
-        teleop_action = teleop_action_processor((raw_action, obs))
+        # Process teleop action through pipeline    
+        teleop_action = teleop_action_processor((raw_action, obs))  # 默认不改变,但是保留了接口可以处理
 
         # Process action for robot through pipeline
-        robot_action_to_send = robot_action_processor((teleop_action, obs))
+        robot_action_to_send = robot_action_processor((teleop_action, obs)) # 要发送的action
 
         # Send processed action to robot (robot_action_processor.to_output should return RobotAction)
         _ = robot.send_action(robot_action_to_send)

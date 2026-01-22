@@ -26,7 +26,7 @@ class PIPERFollower(Robot):
         self.config = config
         self.bus = PiperMotorsBus(
             PiperMotorsBusConfig(
-                can_name="can_follower",
+                can_name="can0",
                 motors={
                     "joint_1": (1, "agilex_piper"),
                     "joint_2": (2, "agilex_piper"),
@@ -103,6 +103,7 @@ class PIPERFollower(Robot):
     @property
     def is_connected(self) -> bool:
         """机器人和所有相机是否都已连接"""
+        print("?")
         return self.bus.is_connected and all(cam.is_connected for cam in self.cameras.values())
 
     @property
@@ -137,13 +138,14 @@ class PIPERFollower(Robot):
         print("All connected")
         self._is_connected = True
 
-        self.calibrate()
+        self.go_to_zero()
+        # self.calibrate()
 
     def disconnect(self) -> None:
         """move to home position, disenable piper and cameras"""
         self.bus.safe_disconnect()
-        print("piper disable after 5 seconds")
-        time.sleep(5)
+        print("piper disable after 2.5 seconds")
+        time.sleep(2.5)
         self.bus.connect(enable=False)
 
         if len(self.cameras) > 0:
@@ -152,13 +154,24 @@ class PIPERFollower(Robot):
 
         self._is_connected = False
 
-    def calibrate(self):
+    def go_to_zero(self):
         """move piper to the home position"""
         if not self._is_connected:
             raise ConnectionError()
-
         self.bus.apply_calibration()
-        self._is_calibrated = True  # 标记为已标定
+        self._is_calibrated = True
+
+
+         
+    def calibrate(self):
+        """piper不需要标定"""
+        return
+    #     """move piper to the home position"""
+    #     if not self._is_connected:
+    #         raise ConnectionError()
+
+    #     self.bus.apply_calibration()
+    #     self._is_calibrated = True  # 标记为已标定
 
     def get_observation(self) -> dict:
         """Capture current joint positions and camera images"""

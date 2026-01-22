@@ -23,6 +23,7 @@ from ..config import TeleoperatorConfig
 @dataclass
 class SOLeaderConfig:
     """Base configuration class for SO Leader teleoperators."""
+    '''定义了SOLeader必须配置的字段'''
 
     # Port to connect to the arm
     port: str
