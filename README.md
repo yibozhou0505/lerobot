@@ -1,3 +1,18 @@
+In this fork, you can use so_leader to lead a piper_follower(the 6DoF arm powered by [Agilex](https://github.com/yibozhou0505/piper_sdk_fork))
+This method is a cheap way to lead a commercial robot arm with high precision for data collection 
+
+[TODO]
+-[] integrate into [lerobot](https://github.com/huggingface/lerobot.git) CLI
+-[] ...
+
+
+
+
+
+
+
+
+
 <p align="center">
   <img alt="LeRobot, Hugging Face Robotics Library" src="./media/readme/lerobot-logo-thumbnail.png" width="100%">
 </p>
