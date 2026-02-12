@@ -23,12 +23,8 @@ from lerobot.robots.piper_follower.piper_follower import PIPERFollower
 from lerobot.robots.piper_follower.config_piper_follower import PIPERFollowerRobotConfig  # 或 PiperFollowerConfig
 import math
 
-
-
-
-
-
-
+# ====CFG======
+TELEOP_PORT = '/dev/ttyACM0'
 
 
 def load_calibration_as_objects(path: Path) -> dict[str, MotorCalibration]:
@@ -51,7 +47,7 @@ def move_cursor_up(lines):
 
 def main():
     print("start")
-    port = "/dev/ttyACM0"
+    port = TELEOP_PORT
     hz = 20
     calib_path = Path("/home/zyb/Code/lerobot/zyb/leader.json")
 
@@ -97,8 +93,8 @@ def main():
 
     PIPER_LIMITS_CNT = {
         "joint_1": (-92000,  92000),
-        "joint_2": ( -2400, 120000),
-        "joint_3": (  3000,-110000),  
+        "joint_2": ( -4400, 175000),
+        "joint_3": (  3000,-160000),  
         "joint_4": (-90000,  90000),
         "joint_5": ( 80000, -80000), 
         "joint_6": (-90000,  90000),
@@ -135,15 +131,12 @@ def main():
 
     GAIN = {
     "base": -1.0,
-    "shoulder": -1.0,
-    "elbow": -1.0,
+    "shoulder": -1.1,
+    "elbow": -1.1,
     "wrist_roll1": -1.0,
     "wrist_pitch": -1.0,
     "wrist_roll2": -1.0,
     }
-
-
-
 
 
 
